@@ -140,7 +140,7 @@ You should send us a [git patch](https://git-scm.com/docs/git-format-patch) file
     rename to mysql/create_database.sql
     ```
 
-1. Make sure that looks like your solution, otherwise repeat the steps above. If everything looks ok, move to the next step.
+1. Make sure that it looks like your solution, otherwise repeat the steps above. If everything looks ok, move to the next step.
 
 1. Commit your changes locally:
     ```console
