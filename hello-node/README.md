@@ -13,13 +13,7 @@ npm install
 Configure the application:
 
 ```
-export RABBITMQ_HOST = [ rabbitmq host address ]
-export RABBITMQ_PORT = [ rabbitmq port ]
-export RABBITMQ_QUEUE = hello
-export MYSQL_HOST = [ database host ]
-export MYSQL_USER = [ database user ]
-export MYSQL_PASSWORD = [ database password ]
-export MYSQL_DB = hello
+export HELLO_GO_ADDR = [ hello-go app address ]
 ```
 
 Run the app localy:

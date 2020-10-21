@@ -1,17 +1,21 @@
-import os, pika
+import os, requests
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 
-host = os.getenv("RABBITMQ_HOST", "localhost")
-port = os.getenv("RABBITMQ_PORT", 5672)
-queue = os.getenv("RABBITMQ_QUEUE", "hello")
+addr = os.getenv("HELLO_NODE_ADDR", "http://localhost:3000")
 
 html = """ 
-<br>Type your favourite <i>pudim</i> flavour: 
+<br>History of programming languages: 
 <br>
 <form method='POST' action='/'>
-    <input type='text' name='flavour'>
+    <select name="lang">
+        <option value="assembly">Assembly</option>
+        <option value="lisp">LISP</option>
+        <option value="python">Python</option>
+        <option value="js">JavaScript</option>
+        <option value="go">Go</option>
+    </select>
     <input type='submit'>
 </form>
 """
@@ -19,9 +23,12 @@ html = """
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    history = ""
     if request.method == 'POST':
-        app.logger.info(request.form.get("flavour"))
-    return html
+        value = request.form.get("lang")
+        app.logger.info(value)
+        history = send(value)
+    return html + "<br>" + history
 
 
 @app.route('/health', methods=['GET'])
@@ -29,16 +36,15 @@ def health():
     return jsonify({"status": "ok"})
 
 
-def enqueue(value):
-    app.logger.info("Received message: %s", value)
-    params = pika.ConnectionParameters(host=host, port=port)
-    connection = pika.BlockingConnection(params)
-    channel = connection.channel()
-    channel.queue_declare(queue=queue)
-    channel.basic_publish(exchange='', routing_key=queue, body=value)
-    connection.close()
-    app.logger.info("Enqueued message on host %s:%s queue %s: %s", host, port,
-                    queue, value)
+def send(value):
+    json = {"lang": value}
+    try:
+        resp = requests.post(addr, json=json)
+        resp.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        raise err
+    app.logger.info("Request sent to %s: %s", addr, json)
+    return resp.json().get("history")
 
 
 if __name__ == "__main__":

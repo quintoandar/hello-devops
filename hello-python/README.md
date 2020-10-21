@@ -13,9 +13,7 @@ pip install -r requirements.txt
 Configure the application:
 
 ```
-export RABBITMQ_HOST = [ rabbitmq host address ]
-export RABBITMQ_PORT = [ rabbitmq port ]
-export RABBITMQ_QUEUE = hello
+export HELLO_NODE_ADDR = [ hello-node app address ]
 ```
 
 Run the app localy:
