@@ -16,7 +16,7 @@ langs = {
 }
 
 app.post('/', (req, res) => {
-  axios.post("http://hello-devops_go_1:9000", {"lang": req.body.lang}).then(() => {
+  axios.post(HELLO_GO_ADDR, {"lang": req.body.lang}).then(() => {
     res.send({"history": langs[req.body.lang]})
   }).catch(() => {
     res.sendStatus(502)
